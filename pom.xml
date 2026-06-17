@@ -9,67 +9,113 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
+        <maven.compiler.release>25</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <lombok.version>1.18.44</lombok.version>
+        <hibernate.version>6.6.34.Final</hibernate.version>
+        <mssql.version>12.6.4.jre11</mssql.version>
+        <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
+        <slf4j.version>2.0.12</slf4j.version>
+        <jackson.version>2.17.2</jackson.version>
+        <jfreechart.version>1.5.5</jfreechart.version>
+        <pdfbox.version>3.0.4</pdfbox.version>
     </properties>
 
-
     <dependencies>
+        <!-- Lombok: removes getter/setter/constructor boilerplate (annotation processor) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.44</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
-
-
-        <!-- Hibernate ORM --> <!-- Combines Objects, creates the physical apperance in the database, Hibernate creates automaticly the same structure as the java object, with that we dont need to create a table in the DATABASE, automatic sAME Names -->
+        <!-- Hibernate ORM: maps the OnlineShopOrders table to the Order entity -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.6.34.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
 
-        <!-- Microsoft SQL Server JDBC Driver -->
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-            <version>12.6.4.jre11</version>
-        </dependency>
-
-        <!-- Jakarta Persistence API -->
+        <!-- Jakarta Persistence API (JPA annotations used by the entity) -->
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
-            <version>3.1.0</version>
+            <version>${jakarta.persistence.version}</version>
         </dependency>
 
-        <!-- Einfaches Logging für Hibernate-Ausgaben -->
+        <!-- Microsoft SQL Server JDBC driver -->
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>${mssql.version}</version>
+        </dependency>
+
+        <!-- Simple SLF4J binding so Hibernate log output is visible on the console -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>2.0.12</version>
+            <version>${slf4j.version}</version>
         </dependency>
 
+        <!-- Jackson: converts the loaded Order objects into JSON -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
-            <version>1.10.0</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <!-- Jackson support for java.time types (LocalDate -> ISO-8601 string) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
+        <!-- JFreeChart: builds the bar chart shown in the Swing window -->
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>${jfreechart.version}</version>
+        </dependency>
 
+        <!-- Apache PDFBox: writes the rendered chart image into a PDF file -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>3.0.4</version>
+            <version>${pdfbox.version}</version>
         </dependency>
-
-
     </dependencies>
 
+    <build>
+        <finalName>online-shop-orders</finalName>
+        <plugins>
+            <!-- Compile with Java 25 and run Lombok as an annotation processor -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
 
-
-
+            <!-- Convenience: `mvn exec:java` launches the Swing application -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <mainClass>org.example.Main</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
