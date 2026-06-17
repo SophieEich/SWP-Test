@@ -1,39 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC
         "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
     <session-factory>
 
+        <!-- Microsoft SQL Server (database "turingdb", topic OnlineShopOrders) -->
         <property name="hibernate.connection.driver_class">
             com.microsoft.sqlserver.jdbc.SQLServerDriver
         </property>
-
-        <property name="hibernate.connection.url"> <!-- Path to databse-->
-            jdbc:sqlserver://185.119.119.126:1433;databaseName=AUSTOURS;encrypt=true;trustServerCertificate=true
+        <property name="hibernate.connection.url">
+            jdbc:sqlserver://185.119.119.126:1433;databaseName=turingdb;encrypt=true;trustServerCertificate=true
         </property>
+        <property name="hibernate.connection.username">turing</property>
+        <property name="hibernate.connection.password">turing</property>
 
-        <property name="hibernate.connection.username">aus</property>
-        <property name="hibernate.connection.password">aus</property>
+        <!-- The SQL Server dialect is auto-detected from the JDBC connection. -->
 
-        <property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property>
+        <!-- The table already exists and is read-only: never let Hibernate touch the schema. -->
+        <property name="hibernate.hbm2ddl.auto">none</property>
 
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
-        <property name="hibernate.hbm2ddl.auto">update</property> <!-- Instead of create we schould use update. But for the first time create is enough-->
-        <!-- CREATE if you want the entire database to loaded from new, UPDATE if you want to change data only
-        <property name="hibernate.hbm2ddl.auto">create</property>
-        <property name="hibernate.hbm2ddl.auto">update</property>
-        also in HotelTable Comment out the methode importFromTxt() LINE 31
-        -->
-        <property name="hibernate.current_session_context_class">thread</property>
 
-        <!-- Entity Mapping -->
-        <!-- <mapping class="com.example.model.Person"/> -->
-        <mapping class="MasterTable.entity.Hotel"/> <!-- Verbindung zu Hotel Klasse damit Hibernate weiß wie das geht-->
-        <mapping class="MasterTable.entity.Occupancy"/>
-        <mapping class="MasterTable.entity.user.UsersHibernate"/>
+        <!-- Entity mapping -->
+        <mapping class="org.example.entity.Order"/>
 
     </session-factory>
 </hibernate-configuration>
